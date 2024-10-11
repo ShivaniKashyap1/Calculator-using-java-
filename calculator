@@ -1,0 +1,93 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ScientificCalculator extends JFrame implements ActionListener {
+    
+    // Components of the calculator
+    private JTextField displayField;
+    private JPanel buttonPanel;
+    private String[] buttons = {
+        "7", "8", "9", "/", "sin", 
+        "4", "5", "6", "*", "cos", 
+        "1", "2", "3", "-", "tan", 
+        "0", ".", "=", "+", "sqrt", 
+        "C", "^", "log", "exp", "%"
+    };
+    private JButton[] buttonObjects = new JButton[buttons.length];
+    
+    private double num1 = 0, num2 = 0, result = 0;
+    private char operator;
+
+    public ScientificCalculator() {
+        setTitle("Scientific Calculator");
+        setSize(400, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        displayField = new JTextField();
+        displayField.setFont(new Font("Arial", Font.BOLD, 24));
+        displayField.setHorizontalAlignment(JTextField.RIGHT);
+        add(displayField, BorderLayout.NORTH);
+        
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(5, 5, 10, 10));
+        add(buttonPanel, BorderLayout.CENTER);
+        
+        // Create buttons and add to panel
+        for (int i = 0; i < buttons.length; i++) {
+            buttonObjects[i] = new JButton(buttons[i]);
+            buttonObjects[i].setFont(new Font("Arial", Font.BOLD, 18));
+            buttonObjects[i].addActionListener(this);
+            buttonPanel.add(buttonObjects[i]);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        
+        if (command.charAt(0) >= '0' && command.charAt(0) <= '9' || command.equals(".")) {
+            displayField.setText(displayField.getText() + command);
+        } else if (command.equals("C")) {
+            displayField.setText("");
+        } else if (command.equals("=")) {
+            num2 = Double.parseDouble(displayField.getText());
+            switch (operator) {
+                case '+': result = num1 + num2; break;
+                case '-': result = num1 - num2; break;
+                case '*': result = num1 * num2; break;
+                case '/': result = num1 / num2; break;
+                case '^': result = Math.pow(num1, num2); break;
+            }
+            displayField.setText(String.valueOf(result));
+        } else if (command.equals("sqrt")) {
+            num1 = Double.parseDouble(displayField.getText());
+            displayField.setText(String.valueOf(Math.sqrt(num1)));
+        } else if (command.equals("sin")) {
+            num1 = Double.parseDouble(displayField.getText());
+            displayField.setText(String.valueOf(Math.sin(Math.toRadians(num1))));
+        } else if (command.equals("cos")) {
+            num1 = Double.parseDouble(displayField.getText());
+            displayField.setText(String.valueOf(Math.cos(Math.toRadians(num1))));
+        } else if (command.equals("tan")) {
+            num1 = Double.parseDouble(displayField.getText());
+            displayField.setText(String.valueOf(Math.tan(Math.toRadians(num1))));
+        } else if (command.equals("log")) {
+            num1 = Double.parseDouble(displayField.getText());
+            displayField.setText(String.valueOf(Math.log(num1)));
+        } else if (command.equals("exp")) {
+            num1 = Double.parseDouble(displayField.getText());
+            displayField.setText(String.valueOf(Math.exp(num1)));
+        } else {
+            num1 = Double.parseDouble(displayField.getText());
+            operator = command.charAt(0);
+            displayField.setText("");
+        }
+    }
+
+    public static void main(String[] args) {
+        ScientificCalculator calculator = new ScientificCalculator();
+        calculator.setVisible(true);
+    }
+}
